@@ -63,18 +63,21 @@ router.get('/:username', authUser, requireLogin, async function(
  *
  */
 
-router.patch('/:username', authUser, requireLogin, requireAdmin, async function(
+router.patch('/:username', authUser, requireLogin, async function(
   req,
   res,
   next
 ) {
   try {
     if (!req.curr_admin && req.curr_username !== req.params.username) {
-      throw new ExpressError('Only  that user or admin can edit a user.', 401);
+      throw new ExpressError('Only that user or admin can edit a user.', 401);
     }
 
     // get fields to change; remove token so we don't try to change it
     let fields = { ...req.body };
+    if (fields.hasOwnProperty('admin')) {
+      throw new ExpressError('Cannot change property "admin"',401)
+    }
     delete fields._token;
 
     let user = await User.update(req.params.username, fields);
@@ -100,7 +103,7 @@ router.delete('/:username', authUser, requireAdmin, async function(
   next
 ) {
   try {
-    User.delete(req.params.username);
+    await User.delete(req.params.username);
     return res.json({ message: 'deleted' });
   } catch (err) {
     return next(err);
