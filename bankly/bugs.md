@@ -4,6 +4,7 @@
 -test suite for 'PATCH /:username' does not test for a user trying to update their own information; removed middleware requireAdmin.
 -test suite for 'PATCH /:username' does not filter out change request for 'admin' fields; added statement to throw 'unauthorized' error when users try to change the admin status
 -test suite for 'DELETE /:username' does not test case when an admin tries to delete a non-existant user; added test and corresponding route to 'await' asynchronous User#delete method
+-Updated authUser function to verify token source (instead of simply decoding it)
 
 # Misc.
 -app.js has two instances of the app export (module.exports = app;)
